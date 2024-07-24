@@ -5,7 +5,9 @@ urlpatterns = [
     path('clase/', views.clase, name='clase_backdoor'),
     path('clase/<int:miembro>', views.clase, name='clase'),
     path('', views.home, name='home'),
-    path('loginUser', views.loginUser, name='login')
+    path('loginUser', views.loginUser, name='login'),
+    path('logout_user', views.logout_user, name='logout'),
+    path('createuser', views.create_appuser, name='createuser')
 ]
 
 # app.com/clase/1 -> json() //docente

@@ -6,7 +6,7 @@ from rest_framework import permissions, status
 from django.urls import reverse
 from .models import AppUser, PerfilDocente
 from .serializers import *
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 class IsStaffUser(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -17,6 +17,10 @@ class IsDocente(permissions.BasePermission):
   def has_permission(self, request, view):
      return request.user.is_docente
 
+@api_view(['POST'])
+def logout_user(request):
+    logout(request)
+    return Response({'detail': 'Logged out successfully'}, status=status.HTTP_200_OK)
 
 # Create your views here.
 @api_view(['GET'])
@@ -27,7 +31,6 @@ def home(request):
   if (request.user.is_estudiante != request.user.is_docente):
     print("Eres o bien estudiante o bien docente")
     return redirect(reverse('clase', args=[0 if request.user.is_estudiante else 1]))
-
   print("algo raro sucedio")
   content = {
     "director" : "Bienvenido, Identificate como usuario de esta app antes de ingresar a una clase"
@@ -67,8 +70,8 @@ def loginUser(request):
   print(f"Attempting login with password: {password}")
   user = authenticate(username=username, password=password)
   if user:
-      login(request, user)  # This sets the session cookie
-      return Response({'detail': 'Login successful'}, status=status.HTTP_200_OK)
+    login(request, user)  # This sets the session cookie
+    return Response({'detail': 'Login successful'}, status=status.HTTP_200_OK)
   return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['POST'])
@@ -213,10 +216,9 @@ def Dclase(request, pk):
 
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication])
-@permission_classes([IsStaffUser])
+@permission_classes([IsDocente])
 def create_appuser(request):
     serializer = AppUserSerializer(data=request.data)
-    
     if serializer.is_valid():
         user = serializer.save()
         return Response({'detail': 'User created successfully'}, status=status.HTTP_201_CREATED)
