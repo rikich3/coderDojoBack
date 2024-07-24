@@ -72,12 +72,14 @@ class EntregaSerializerAlDocente(serializers.ModelSerializer):
 
 class ClaseSerializerAlDocente(serializers.ModelSerializer):
   entregas = serializers.SerializerMethodField()
+  docente = PerfilDocenteSerializer()
   publicaciones = PublicacionSerializer(many=True, read_only=True)
   estudiantes = PerfilEstudianteSerializer(many=True, read_only=True)
+
   
   class Meta:
       model = Clase
-      fields = ['id', 'name', 'entregas', 'publicaciones', 'estudiantes']
+      fields = ['id','docente', 'name', 'entregas', 'publicaciones', 'estudiantes']
   def get_entregas(self, obj):
     asignaciones = Asignacion.objects.filter(clase=obj)
     return EntregaSerializerAlDocente(Entrega.objects.filter(asignacion__in=asignaciones), many=True).data

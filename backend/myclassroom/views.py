@@ -216,7 +216,6 @@ def Dclase(request, pk):
 
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication])
-@permission_classes([IsDocente])
 def create_appuser(request):
     serializer = AppUserSerializer(data=request.data)
     if serializer.is_valid():
@@ -224,3 +223,14 @@ def create_appuser(request):
         return Response({'detail': 'User created successfully'}, status=status.HTTP_201_CREATED)
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def RperfilDocente(request, pk):
+    try:
+        docente = PerfilDocente.objects.get(pk=pk)
+    except Entrega.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    serializer = PerfilDocenteSerializer(docente)
+    return Response(serializer.data)
