@@ -27,14 +27,15 @@ def logout_user(request):
 @authentication_classes([SessionAuthentication])
 def home(request):
   content = None
-  
-  if (request.user.is_estudiante != request.user.is_docente):
-    print("Eres o bien estudiante o bien docente")
-    return redirect(reverse('clase', args=[0 if request.user.is_estudiante else 1]))
-  print("algo raro sucedio")
-  content = {
-    "director" : "Bienvenido, Identificate como usuario de esta app antes de ingresar a una clase"
-  }
+  try:
+    if (request.user.is_estudiante != request.user.is_docente):
+        print("Eres o bien estudiante o bien docente")
+        return redirect(reverse('clase', args=[0 if request.user.is_estudiante else 1]))
+  except:
+    print("algo raro sucedio")
+    content = {
+        "director" : "Bienvenido, Identificate como usuario de esta app antes de ingresar a una clase"
+    }
   return Response(content)
 
 @api_view(['GET'])
@@ -64,15 +65,28 @@ def clase(request, miembro=-1):
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication])
 def loginUser(request):
-  username = request.data.get('username')
-  password = request.data.get('password')
-  print(f"Attempting login with username: {username}")
-  print(f"Attempting login with password: {password}")
-  user = authenticate(username=username, password=password)
-  if user:
-    login(request, user)  # This sets the session cookie
-    return Response({'detail': 'Login successful'}, status=status.HTTP_200_OK)
-  return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+    print("Hola, antes de sacar datos")
+    username = request.data.get('username')
+    password = request.data.get('password')
+    print(f"Attempting login with username: {username}")
+    print(f"Attempting login with password: {password}")
+    
+    # Depuración: Verificar si se recibe el username y el password
+    if not username or not password:
+        print("Username o password no recibidos")
+        return Response({'detail': 'Username o password no proporcionados'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    user = authenticate(username=username, password=password)
+    
+    # Depuración: Verificar si el usuario fue autenticado
+    if user is not None:
+        login(request, user)  # Esto establece la cookie de sesión
+        print("Logeado correctamente")
+        print(user.username)
+        return Response({'detail': 'Login successful'}, status=status.HTTP_200_OK)
+    else:
+        print("No se pudo autenticar el usuario")
+        return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication])

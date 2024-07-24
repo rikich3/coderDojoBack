@@ -20,10 +20,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-z)iho!1-s1)l6ly&(n#m7c48!pdf%poqv$ov2ih7g@x%_74&$k'
+SECRET_KEY = "k#el+!qyinl@66^8k3q&nezk73q$=r1q@w)qmlcj2bg8%@3rz%"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+# Elamigovecinospyderman
+CSRF_COOKIE_HTTPONLY = False
+SESSION_COOKIE_HTTPONLY = True
+
 
 ALLOWED_HOSTS = ['*']
 
@@ -44,9 +49,24 @@ INSTALLED_APPS = [
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8000',
     'http://127.0.0.1',
+    'http://127.0.0.1:3333',
     'http://0.0.0.0',
+    'http://0.0.0.0:8000',
     'http://localhost:3333'
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:3333',
+    'http://127.0.0.1:3333',
+]
+
+SESSION_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SECURE = True
+CSRF_USE_SESSIONS = True
+
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
@@ -66,6 +86,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    # 'myclassroom.middle.DisableCSRFMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
