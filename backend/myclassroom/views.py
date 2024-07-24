@@ -22,13 +22,16 @@ class IsDocente(permissions.BasePermission):
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication])
 def home(request):
-  try:
-    if (request.user.is_estudiante != request.user.is_docente):
-      return redirect(reverse('clase', args=[0 if request.user.isEstudiante else 1]))
-  except:
-    content = {
-      "director" : "Bienvenido, Identificate como usuario de esta app antes de ingresar a una clase"
-    }
+  content = None
+  
+  if (request.user.is_estudiante != request.user.is_docente):
+    print("Eres o bien estudiante o bien docente")
+    return redirect(reverse('clase', args=[0 if request.user.is_estudiante else 1]))
+
+  print("algo raro sucedio")
+  content = {
+    "director" : "Bienvenido, Identificate como usuario de esta app antes de ingresar a una clase"
+  }
   return Response(content)
 
 @api_view(['GET'])
