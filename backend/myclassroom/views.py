@@ -32,7 +32,7 @@ def home(request):
         print("Eres o bien estudiante o bien docente")
         return redirect(reverse('clase', args=[0 if request.user.is_estudiante else 1]))
   except:
-    print("algo raro sucedio")
+    print("algo raro sucedio: home")
     content = {
         "director" : "Bienvenido, Identificate como usuario de esta app antes de ingresar a una clase"
     }
