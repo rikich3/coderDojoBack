@@ -3,8 +3,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 class AppUser(AbstractUser):
-  is_estudiante = models.BooleanField(default=False)
-  is_docente = models.BooleanField(default=False)
+    is_estudiante = models.BooleanField(default=False)
+    is_docente = models.BooleanField(default=False)
         
 class PerfilEstudiante(models.Model):
     user = models.OneToOneField(AppUser, on_delete=models.CASCADE)
