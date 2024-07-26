@@ -1,4 +1,5 @@
 /coder-dojo-front
 *.zip
 /__pycache__
+venv
 
