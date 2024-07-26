@@ -256,7 +256,6 @@ def get_user_data(request):
   user = request.user
   user_data = {
     'username': user.username,
-    'is_docente': hasattr(user, 'perfil_docente'),
-    'is_estudiante': hasattr(user, 'perfil_estudiante'),
+    'rol': 'Docente' if user.is_docente else 'Estudiante',
   }
   return Response(user_data)
