@@ -14,8 +14,8 @@ class IsStaffUser(permissions.BasePermission):
         return request.user and request.user.is_authenticated and request.user.is_staff
       
 class IsDocente(permissions.BasePermission):
-  def has_permission(self, request, view):
-     return request.user.is_docente
+    def has_permission(self, request, view):
+       return request.user.is_docente
 
 @api_view(['POST'])
 def logout_user(request):
@@ -248,3 +248,21 @@ def RperfilDocente(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
     serializer = PerfilDocenteSerializer(docente)
     return Response(serializer.data)
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def get_user_data(request):
+  user = request.user
+  user_data = {
+    'username': user.username,
+    'rol': 'Docente' if user.is_docente else 'Estudiante',
+  }
+  return Response(user_data)
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def is_authenticated(request):
+    return Response({'authenticated': not request.user.is_anonymous}, status=status.HTTP_200_OK)
+
+
