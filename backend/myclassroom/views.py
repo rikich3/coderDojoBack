@@ -259,3 +259,10 @@ def get_user_data(request):
     'rol': 'Docente' if user.is_docente else 'Estudiante',
   }
   return Response(user_data)
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def is_authenticated(request):
+    return Response({'authenticated': not request.user.is_anonymous}, status=status.HTTP_200_OK)
+
+
